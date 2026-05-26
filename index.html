@@ -455,6 +455,8 @@
       .teacher-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.js"></script>
 </head>
 <body>
 
@@ -474,26 +476,27 @@
     <div class="nav-group">
       <div class="nav-group-label">基礎概念</div>
       <div class="nav-item" onclick="jumpTo(0,event)"><span class="nav-num">1</span>封面</div>
-      <div class="nav-item" onclick="jumpTo(1,event)"><span class="nav-num">2</span>講師介紹</div>
-      <div class="nav-item" onclick="jumpTo(2,event)"><span class="nav-num">3</span>今天的重點</div>
-      <div class="nav-item" onclick="jumpTo(3,event)"><span class="nav-num">4</span>AI 神連動概念</div>
-      <div class="nav-item" onclick="jumpTo(4,event)"><span class="nav-num">5</span>核心金句</div>
-      <div class="nav-item" onclick="jumpTo(5,event)"><span class="nav-num">6</span>神連動 SOP 四步驟</div>
+      <div class="nav-item" onclick="jumpTo(1,event)"><span class="nav-num">2</span>🌥️ 大家的想法</div>
+      <div class="nav-item" onclick="jumpTo(2,event)"><span class="nav-num">3</span>講師介紹</div>
+      <div class="nav-item" onclick="jumpTo(3,event)"><span class="nav-num">4</span>今天的重點</div>
+      <div class="nav-item" onclick="jumpTo(4,event)"><span class="nav-num">5</span>AI 神連動概念</div>
+      <div class="nav-item" onclick="jumpTo(5,event)"><span class="nav-num">6</span>核心金句</div>
+      <div class="nav-item" onclick="jumpTo(6,event)"><span class="nav-num">7</span>神連動 SOP 四步驟</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-label">⭐ 情境操作</div>
-      <div class="nav-item" onclick="jumpTo(6,event)"><span class="nav-num">7</span>五大情境選擇 主選單</div>
-      <div class="nav-item" onclick="jumpTo(7,event)"><span class="nav-num">8</span>情境① ✈️ 東京旅遊</div>
-      <div class="nav-item" onclick="jumpTo(8,event)"><span class="nav-num">9</span>情境② 📚 學測英文</div>
-      <div class="nav-item" onclick="jumpTo(9,event)"><span class="nav-num">10</span>情境③ 📈 AI投資</div>
-      <div class="nav-item" onclick="jumpTo(10,event)"><span class="nav-num">11</span>情境④ 🍳 AI私廚</div>
-      <div class="nav-item" onclick="jumpTo(11,event)"><span class="nav-num">12</span>情境⑤ 🏃 健康飲食</div>
+      <div class="nav-item" onclick="jumpTo(7,event)"><span class="nav-num">8</span>五大情境選擇 主選單</div>
+      <div class="nav-item" onclick="jumpTo(8,event)"><span class="nav-num">9</span>情境① ✈️ 東京旅遊</div>
+      <div class="nav-item" onclick="jumpTo(9,event)"><span class="nav-num">10</span>情境② 📚 學測英文</div>
+      <div class="nav-item" onclick="jumpTo(10,event)"><span class="nav-num">11</span>情境③ 📈 AI投資</div>
+      <div class="nav-item" onclick="jumpTo(11,event)"><span class="nav-num">12</span>情境④ 🍳 AI私廚</div>
+      <div class="nav-item" onclick="jumpTo(12,event)"><span class="nav-num">13</span>情境⑤ 🏃 健康飲食</div>
     </div>
     <div class="nav-group">
       <div class="nav-group-label">收尾</div>
-      <div class="nav-item" onclick="jumpTo(12,event)"><span class="nav-num">13</span>作業說明</div>
-      <div class="nav-item" onclick="jumpTo(13,event)"><span class="nav-num">14</span>今天你完成了！</div>
-      <div class="nav-item" onclick="jumpTo(14,event)"><span class="nav-num">15</span>結語</div>
+      <div class="nav-item" onclick="jumpTo(13,event)"><span class="nav-num">14</span>作業說明</div>
+      <div class="nav-item" onclick="jumpTo(14,event)"><span class="nav-num">15</span>今天你完成了！</div>
+      <div class="nav-item" onclick="jumpTo(15,event)"><span class="nav-num">16</span>結語</div>
     </div>
   </div>
 </div>
@@ -515,6 +518,60 @@
     </div>
   </div>
 
+
+  <!-- ─── S2: WordCloud ──────────────────────── -->
+  <div class="slide" id="wc-slide" style="background:linear-gradient(160deg,#FDFAF5 60%,#FFF0E0);flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 56px 16px;">
+    <div style="width:100%;max-width:1060px;height:100%;display:flex;flex-direction:column;">
+
+      <!-- title -->
+      <div style="text-align:center;margin-bottom:14px;flex-shrink:0;">
+        <div class="eyebrow" style="margin-bottom:6px;">INTERACTIVE · 大家一起回答</div>
+        <div style="font-size:26px;font-weight:900;color:var(--text);line-height:1.35;">
+          過去這幾週你上的 AI 課程對你有什麼幫助？
+        </div>
+        <div style="font-size:15px;color:var(--text-mid);margin-top:6px;">也可以分享一下你的想法 👇</div>
+      </div>
+
+      <!-- input row -->
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-shrink:0;" onclick="event.stopPropagation()">
+        <input id="wc-input" type="text"
+          placeholder="輸入你的想法，例如：省時間、學 Gemini、做圖卡…"
+          onkeydown="if(event.key==='Enter'){wcSubmit();event.preventDefault();}"
+          onfocus="this.style.borderColor='var(--coral)'"
+          onblur="this.style.borderColor='var(--border)'"
+          style="flex:1;padding:13px 18px;border:2px solid var(--border);border-radius:14px;
+                 font-family:inherit;font-size:16px;color:var(--text);outline:none;
+                 background:#fff;box-shadow:0 2px 8px rgba(139,99,71,.07);transition:border .2s;">
+        <button onclick="wcSubmit();event.stopPropagation();"
+          onmouseover="this.style.background='var(--coral-dk)'"
+          onmouseout="this.style.background='var(--coral)'"
+          style="background:var(--coral);color:#fff;border:none;border-radius:14px;
+                 padding:13px 28px;font-size:16px;font-weight:900;cursor:pointer;
+                 font-family:inherit;white-space:nowrap;box-shadow:0 4px 14px rgba(232,114,74,.35);
+                 transition:background .2s;">✉️ 送出</button>
+      </div>
+
+      <!-- canvas card -->
+      <div style="flex:1;min-height:0;background:#fff;border-radius:20px;border:1px solid var(--border);
+                  box-shadow:0 8px 32px rgba(139,99,71,.1);overflow:hidden;position:relative;"
+           onclick="event.stopPropagation()">
+        <canvas id="wc-canvas" style="display:block;width:100%;height:100%;"></canvas>
+        <div id="wc-empty" style="position:absolute;inset:0;display:flex;flex-direction:column;
+             align-items:center;justify-content:center;gap:10px;pointer-events:none;">
+          <div style="font-size:48px;">☁️</div>
+          <div style="font-size:15px;color:var(--text-lt);">等待大家輸入…</div>
+        </div>
+      </div>
+
+      <!-- status bar -->
+      <div style="display:flex;justify-content:space-between;align-items:center;
+                  padding:10px 4px 0;flex-shrink:0;font-size:12px;color:var(--text-lt);"
+           onclick="event.stopPropagation()">
+        <span id="wc-count">0 則回應</span>
+        <span>每 15 秒自動更新 · Enter 快速送出</span>
+      </div>
+    </div>
+  </div>
   <!-- ─── S2: Teacher ───────────────────────── -->
   <div class="slide" style="background:#fff;">
     <div class="teacher-grid">
@@ -644,31 +701,31 @@
       <div class="divider"></div>
       <div style="font-size:14px;color:var(--text-lt);margin-bottom:22px;">點擊任一情境卡片，直接進入操作流程 →</div>
       <div style="display:flex;gap:14px;">
-        <div class="hub-card" onclick="jumpTo(7,event)">
+        <div class="hub-card" onclick="jumpTo(8,event)">
           <div class="hub-emoji">✈️</div>
           <div class="hub-num">01</div>
           <div class="hub-title">東京旅遊</div>
           <div class="hub-sub">打造自助旅行企劃</div>
         </div>
-        <div class="hub-card" onclick="jumpTo(8,event)">
+        <div class="hub-card" onclick="jumpTo(9,event)">
           <div class="hub-emoji">📚</div>
           <div class="hub-num">02</div>
           <div class="hub-title">學測英文</div>
           <div class="hub-sub">打造備考神器</div>
         </div>
-        <div class="hub-card" onclick="jumpTo(9,event)">
+        <div class="hub-card" onclick="jumpTo(10,event)">
           <div class="hub-emoji">📈</div>
           <div class="hub-num">03</div>
           <div class="hub-title">AI 投資</div>
           <div class="hub-sub">打造投資戰情室</div>
         </div>
-        <div class="hub-card" onclick="jumpTo(10,event)">
+        <div class="hub-card" onclick="jumpTo(11,event)">
           <div class="hub-emoji">🍳</div>
           <div class="hub-num">04</div>
           <div class="hub-title">AI 私廚</div>
           <div class="hub-sub">打造備餐管家</div>
         </div>
-        <div class="hub-card" onclick="jumpTo(11,event)">
+        <div class="hub-card" onclick="jumpTo(12,event)">
           <div class="hub-emoji">🏃</div>
           <div class="hub-num">05</div>
           <div class="hub-title">健康飲食</div>
@@ -1090,7 +1147,7 @@ situations.forEach((sit, si) => {
             <div class="sit-subtitle">${sit.subtitle}</div>
           </div>
         </div>
-        <button class="home-btn" onclick="jumpTo(6,event)">🏠 主選單</button>
+        <button class="home-btn" onclick="jumpTo(7,event)">🏠 主選單</button>
       </div>
 
       <div class="sit-tabs">
@@ -1201,9 +1258,10 @@ document.addEventListener('keydown', e => {
 document.getElementById('deck').addEventListener('click', e => {
   // Skip if clicking on a situation slide's interactive parts
   if (e.target.closest('.sit-tab, .home-btn, .copy-btn, .hub-card, .warm-btn')) return;
-  // Skip if current slide is a situation slide (has no-auto-advance logic)
+  // Skip situation slides and the word cloud slide
   const currentSlide = slides[cur];
   if (currentSlide.classList.contains('situation-slide')) return;
+  if (currentSlide.id === 'wc-slide') return;
   goTo(cur + 1);
 });
 
@@ -1227,6 +1285,119 @@ function jumpTo(n, e) {
   document.getElementById('nav-overlay').classList.remove('open');
   goTo(n);
 }
+
+// ══════════════════════════════════════════════
+//  WORD CLOUD (Slide 2)
+//  填入你的 Supabase 資訊後即可啟用
+// ══════════════════════════════════════════════
+const WC_SUPABASE_URL  = 'YOUR_SUPABASE_URL';   // ← 替換這裡
+const WC_SUPABASE_KEY  = 'YOUR_SUPABASE_ANON_KEY'; // ← 替換這裡
+const WC_TABLE         = 'ai_feedback';           // 資料表名稱
+
+let _wcClient = null;
+let _wcTimer  = null;
+let _wcReady  = false;
+
+function wcInit() {
+  if (_wcReady) return;
+  if (WC_SUPABASE_URL.startsWith('YOUR_')) {
+    document.getElementById('wc-empty').innerHTML =
+      '<div style="font-size:15px;color:var(--coral);text-align:center;padding:20px;">' +
+      '⚠️ 請將 HTML 裡的<br><b>WC_SUPABASE_URL</b> 和 <b>WC_SUPABASE_KEY</b><br>替換成你的 Supabase 資訊</div>';
+    document.getElementById('wc-empty').style.display = 'flex';
+    return;
+  }
+  try {
+    _wcClient = window.supabase.createClient(WC_SUPABASE_URL, WC_SUPABASE_KEY);
+    _wcReady  = true;
+    wcFetch();
+    clearInterval(_wcTimer);
+    _wcTimer = setInterval(wcFetch, 15000);
+  } catch(err) {
+    console.error('Supabase init error:', err);
+  }
+}
+
+async function wcFetch() {
+  if (!_wcClient) return;
+  try {
+    const { data, error } = await _wcClient.from(WC_TABLE).select('content');
+    if (error) throw error;
+    wcRender(data.map(r => r.content));
+    document.getElementById('wc-count').textContent = data.length + ' 則回應';
+  } catch(err) { console.error('WC fetch error:', err); }
+}
+
+function wcBuildMap(texts) {
+  const stop = new Set(['的','了','和','是','在','也','我','你','有','很','一','不','都','到','以','用','可以','可','就','這','那','讓','幫','能','學','用來','因為','所以']);
+  const freq = {};
+  texts.forEach(t => {
+    if (!t) return;
+    t.split(/[\s，。、！？,.!?\n「」【】]+/).forEach(w => {
+      w = w.trim();
+      if (w.length < 2 || stop.has(w)) return;
+      freq[w] = (freq[w] || 0) + 1;
+    });
+  });
+  return Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0, 80);
+}
+
+function wcRender(texts) {
+  const canvas = document.getElementById('wc-canvas');
+  const empty  = document.getElementById('wc-empty');
+  const wrap   = canvas.parentElement;
+  canvas.width  = wrap.clientWidth  || 900;
+  canvas.height = wrap.clientHeight || 380;
+
+  const words = wcBuildMap(texts);
+  if (!words.length) {
+    empty.innerHTML = '<div style="font-size:48px;">☁️</div><div style="font-size:15px;color:var(--text-lt);">等待大家輸入…</div>';
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const maxF = words[0][1];
+  const palette = ['#E8724A','#C1522A','#F4A261','#8B6347','#E9C46A','#A0522D'];
+  WordCloud(canvas, {
+    list: words.map(([w,f]) => [w, Math.round(16 + (f/maxF)*58)]),
+    gridSize: 10,
+    fontFamily: "'Noto Sans TC', sans-serif",
+    color: () => palette[Math.floor(Math.random() * palette.length)],
+    backgroundColor: '#ffffff',
+    rotateRatio: 0.25,
+    rotationSteps: 2,
+    minSize: 12,
+    drawOutOfBound: false,
+    shrinkToFit: true,
+  });
+}
+
+async function wcSubmit() {
+  const input = document.getElementById('wc-input');
+  const text  = (input.value || '').trim();
+  if (!text) return;
+  if (!_wcClient) { wcInit(); return; }
+  input.disabled = true;
+  input.value = '';
+  try {
+    await _wcClient.from(WC_TABLE).insert({ content: text });
+    await wcFetch();
+  } catch(err) { console.error('WC submit error:', err); }
+  input.disabled = false;
+  input.focus();
+}
+
+// 切到 slide 2 時自動初始化
+const _origGoTo = goTo;
+goTo = function(n) {
+  _origGoTo(n);
+  if (n === 1) setTimeout(wcInit, 200);
+};
+// 也在 wc-slide 可見時觸發 resize render
+window.addEventListener('resize', () => {
+  if (cur === 1 && _wcReady) wcFetch();
+});
 </script>
 </body>
 </html>
